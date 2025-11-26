@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Estou com saudades</title>
+  <style>
+    :root{--bg1:#ff9a9e;--bg2:#fad0c4;--glow:#fff7}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+    .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,var(--bg1),var(--bg2));}
+    .bg-overlay{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+    .panel{position:relative;z-index:2;text-align:center;padding:48px;border-radius:16px;backdrop-filter: blur(6px) saturate(1.1);box-shadow:0 10px 40px rgba(0,0,0,0.18);max-width:900px;width:88%;}
+    h1{font-size:clamp(28px,6vw,56px);margin:0 0 12px;color:#fff;text-shadow:0 6px 30px rgba(255,120,140,0.25)}
+    p{font-size:clamp(16px,2.6vw,22px);margin:0;color:#fff;opacity:0.95}
+    .controls{margin-top:20px;display:flex;gap:12px;justify-content:center}
+    .btn{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.18);padding:10px 16px;border-radius:999px;color:#fff;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
+    .btn:active{transform:translateY(1px)}
+    .romantic{position:relative;overflow:hidden;transition:0.3s}
+    .romantic::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg, rgba(255,180,200,0.45), rgba(255,255,255,0.25));transform:translateX(-100%);transition:transform 0.5s ease}
+    .romantic:hover::before{transform:translateX(0)}
+    .romantic:hover{box-shadow:0 0 18px rgba(255,120,160,0.6);transform:scale(1.05)}
+    .floating-star{position:absolute;color:#fff;font-size:14px;animation:floatStar 6s linear infinite;opacity:0.75}
+    @keyframes floatStar{0%{transform:translateY(0)}100%{transform:translateY(-800px);opacity:0}}
+    .floating-heart{position:absolute;color:#ff8bb8;font-size:22px;animation:floatHeart 7s ease-in infinite;opacity:0.85}
+    @keyframes floatHeart{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-900px) scale(1.4);opacity:0}}
+    .love-stamp{display:inline-block;margin-top:18px;font-size:36px;animation:pulseStamp 2.2s infinite}
+    @keyframes pulseStamp{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="bg-overlay"></div>
+
+    <div class="panel">
+      <h1 id="mainText">Fabiana Chasse Vargas…</h1>
+      <p id="subText">Sinto saudades de você de um jeito que não cabe em palavras…</p>
+
+      <div class="controls">
+        <button class="btn romantic" id="night">🌙 Modo noite</button>
+        <button class="btn romantic" id="music">🎵 Música</button>
+      </div>
+
+      <div style="margin-top:14px"><div class="love-stamp">💘</div></div>
+    </div>
+  </div>
+
+  <!-- AUDIO FIXADO E GARANTIDO QUE TOCA APÓS CLIQUE -->
+  <audio id="bgm" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2021/09/20/audio_3badd90c57.mp3?filename=romantic-soft-piano-117997.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bgOverlay = document.querySelector('.bg-overlay');
+      const musicBtn = document.getElementById('music');
+      const nightBtn = document.getElementById('night');
+      const bgm = document.getElementById('bgm');
+
+      function createFloating(){
+        for(let i=0;i<14;i++){
+          const star=document.createElement('div');
+          star.className='floating-star';
+          star.textContent='✦';
+          star.style.left=Math.random()*100+'%';
+          star.style.top='100%';
+          star.style.fontSize=(10+Math.random()*12)+'px';
+          bgOverlay.appendChild(star);
+          setTimeout(()=>star.remove(),7000);
+        }
+        for(let i=0;i<10;i++){
+          const heart=document.createElement('div');
+          heart.className='floating-heart';
+          heart.textContent='❤️';
+          heart.style.left=Math.random()*100+'%';
+          heart.style.top='100%';
+          heart.style.fontSize=(18+Math.random()*18)+'px';
+          bgOverlay.appendChild(heart);
+          setTimeout(()=>heart.remove(),8000);
+        }
+      }
+
+      setInterval(createFloating,2500);
+      createFloating();
+
+      musicBtn.addEventListener('click', async ()=>{
+        try{
+          if(bgm.paused) await bgm.play(); else bgm.pause();
+        }catch(err){console.log(err)}
+      });
+
+      nightBtn.addEventListener('click',()=>{
+        document.body.classList.toggle('night');
+      });
+    });
+  </script>
+</body>
+</html>
